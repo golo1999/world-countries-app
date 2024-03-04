@@ -6,7 +6,7 @@
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_explore_night</item>
         <item name="windowSplashScreenAnimationDuration">2000</item>
         <item name="windowSplashScreenBackground">#202D36</item>
-        <item name="android:navigationBarColor">#202D36</item>
+<!--        <item name="android:navigationBarColor">#202D36</item>-->
     </style>
 
 </resources>
