@@ -1,4 +1,4 @@
-package com.example.worldcountriesapp.ui.screen.home
+package com.example.worldcountriesapp.ui.screen.countrylist
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -35,16 +35,16 @@ import com.example.worldcountriesapp.ui.screen.loading.LoadingScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
-    state: HomeScreenState,
-    onEvent: (HomeScreenEvent) -> Unit,
+fun CountryListScreen(
+    state: CountryListScreenState,
+    onEvent: (CountryListScreenEvent) -> Unit,
     onCardClick: (countryCode: String) -> Unit
 ) {
     when {
         state.isFirstRender -> {
             LaunchedEffect(Unit) {
-                onEvent(HomeScreenEvent.GetAllCountries)
-                onEvent(HomeScreenEvent.SetIsFirstRender(value = false))
+                onEvent(CountryListScreenEvent.GetAllCountries)
+                onEvent(CountryListScreenEvent.SetIsFirstRender(value = false))
             }
         }
 
@@ -65,13 +65,13 @@ fun HomeScreen(
                     // Using "DockedSearchBar" instead of "SearchBar"
                     DockedSearchBar(
                         query = state.searchQuery,
-                        onQueryChange = { newSearchQuery -> onEvent(HomeScreenEvent.SetSearchQuery(query = newSearchQuery)) },
+                        onQueryChange = { newSearchQuery -> onEvent(CountryListScreenEvent.SetSearchQuery(query = newSearchQuery)) },
                         onSearch = {
-                            onEvent(HomeScreenEvent.SetIsSearchBarActive(value = false))
-                            onEvent(HomeScreenEvent.FilterCountriesByName(name = it))
+                            onEvent(CountryListScreenEvent.SetIsSearchBarActive(value = false))
+                            onEvent(CountryListScreenEvent.FilterCountriesByName(name = it))
                         },
                         active = state.isSearchBarActive,
-                        onActiveChange = { newActiveStatus -> onEvent(HomeScreenEvent.SetIsSearchBarActive(value = newActiveStatus)) },
+                        onActiveChange = { newActiveStatus -> onEvent(CountryListScreenEvent.SetIsSearchBarActive(value = newActiveStatus)) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(
@@ -98,9 +98,9 @@ fun HomeScreen(
                                     imageVector = Icons.Default.Clear,
                                     contentDescription = stringResource(id = R.string.clear_icon),
                                     modifier = Modifier.clickable {
-                                        onEvent(HomeScreenEvent.SetSearchQuery(query = ""))
-                                        onEvent(HomeScreenEvent.FilterCountriesByName(name = ""))
-                                        onEvent(HomeScreenEvent.SetIsSearchBarActive(value = false))
+                                        onEvent(CountryListScreenEvent.SetSearchQuery(query = ""))
+                                        onEvent(CountryListScreenEvent.FilterCountriesByName(name = ""))
+                                        onEvent(CountryListScreenEvent.SetIsSearchBarActive(value = false))
                                     },
                                     tint = when (state.isSearchBarActive) {
                                         true -> MaterialTheme.colorScheme.onBackground
@@ -131,7 +131,7 @@ fun HomeScreen(
                 item {
                     ExposedDropdownMenuBox(
                         expanded = state.isSearchBarExpanded,
-                        onExpandedChange = { onEvent(HomeScreenEvent.SetIsSearchBarExpanded(value = !state.isSearchBarExpanded)) },
+                        onExpandedChange = { onEvent(CountryListScreenEvent.SetIsSearchBarExpanded(value = !state.isSearchBarExpanded)) },
                         modifier = Modifier.padding(
                             horizontal = 32.dp,
                             vertical = 8.dp
@@ -169,7 +169,7 @@ fun HomeScreen(
                         )
                         ExposedDropdownMenu(
                             expanded = state.isSearchBarExpanded,
-                            onDismissRequest = { onEvent(HomeScreenEvent.SetIsSearchBarExpanded(value = false)) }
+                            onDismissRequest = { onEvent(CountryListScreenEvent.SetIsSearchBarExpanded(value = false)) }
                         ) {
                             state.allRegions.forEach { region ->
                                 DropdownMenuItem(
@@ -180,9 +180,9 @@ fun HomeScreen(
                                         )
                                     },
                                     onClick = {
-                                        onEvent(HomeScreenEvent.SetSelectedRegion(region))
-                                        onEvent(HomeScreenEvent.FilterCountriesByRegion(region))
-                                        onEvent(HomeScreenEvent.SetIsSearchBarExpanded(value = false))
+                                        onEvent(CountryListScreenEvent.SetSelectedRegion(region))
+                                        onEvent(CountryListScreenEvent.FilterCountriesByRegion(region))
+                                        onEvent(CountryListScreenEvent.SetIsSearchBarExpanded(value = false))
                                     },
                                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
                                 )
