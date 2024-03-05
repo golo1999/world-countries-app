@@ -27,6 +27,7 @@ data class Country(
     val timezones: List<String>,
     val continents: List<String>,
     val flags: Map<String, String>,
-    var startOfWeek: String,
+    val coatOfArms: Map<String, String>,
+    val startOfWeek: String,
     val capitalInfo: Map<String, List<Double>>
 )

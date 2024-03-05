@@ -19,7 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -32,7 +35,7 @@ import com.example.worldcountriesapp.ui.common.CountryCapitalText
 import com.example.worldcountriesapp.ui.common.CountryCarSideText
 import com.example.worldcountriesapp.ui.common.CountryContinentsText
 import com.example.worldcountriesapp.ui.common.CountryCurrenciesText
-import com.example.worldcountriesapp.ui.common.CountryFlagDialog
+import com.example.worldcountriesapp.ui.common.CountryInfoDialog
 import com.example.worldcountriesapp.ui.common.CountryLandlockedText
 import com.example.worldcountriesapp.ui.common.CountryLanguagesText
 import com.example.worldcountriesapp.ui.common.CountryNativeNamesText
@@ -50,9 +53,9 @@ import com.example.worldcountriesapp.ui.screen.loading.LoadingScreen
 fun CountryInfoScreen(
     code: String,
     state: CountryInfoScreenState,
-    onEvent: (CountryInfoScreenEvent) -> Unit,
     onBackClick: () -> Unit,
-    onBorderCountryClick: (countryCode: String) -> Unit
+    onBorderCountryClick: (countryCode: String) -> Unit,
+    onEvent: (CountryInfoScreenEvent) -> Unit
 ) {
     LaunchedEffect(Unit) {
         onEvent(CountryInfoScreenEvent.ResetBorderCountries)
@@ -82,10 +85,9 @@ fun CountryInfoScreen(
         }
 
         else -> {
-            val svgFlag = state.countryInfo.flags[stringResource(id = R.string.svg).lowercase()]
             if (state.isDialogOpen) {
-                CountryFlagDialog(
-                    flagPath = svgFlag,
+                CountryInfoDialog(
+                    imageData = state.dialogImageData,
                     onDismiss = { onEvent(CountryInfoScreenEvent.SetIsDialogOpen(value = false)) })
             }
             Column(
@@ -118,26 +120,68 @@ fun CountryInfoScreen(
                             fontWeight = FontWeight.W400
                         )
                     }
-                    AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(svgFlag)
-                            .decoderFactory(SvgDecoder.Factory())
-                            .build(),
-                        modifier = Modifier
-                            .clickable {
-                                onEvent(CountryInfoScreenEvent.SetIsDialogOpen(value = true))
-                            }
-                            .padding(bottom = 48.dp),
-                        contentDescription = null
-                    )
+                    state.countryInfo.flags[stringResource(id = R.string.svg).lowercase()]?.let {
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(it)
+                                .decoderFactory(SvgDecoder.Factory())
+                                .build(),
+                            modifier = Modifier
+                                .clickable {
+                                    if (!state.dialogImageData.equals(it)) {
+                                        onEvent(CountryInfoScreenEvent.SetDialogImageData(imageData = it))
+                                    }
+                                    onEvent(CountryInfoScreenEvent.SetIsDialogOpen(value = true))
+                                }
+                                .padding(bottom = 48.dp),
+                            contentDescription = null
+                        )
+                    }
                     Text(
-                        text = state.countryInfo.name.common,
+                        text = state.countryInfo.name.official,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.W800,
                         modifier = Modifier.padding(bottom = 32.dp),
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Column(modifier = Modifier.padding(bottom = 32.dp)) {
+                        state.countryInfo.flags[stringResource(id = R.string.alt).lowercase()]?.let {
+                            Text(
+                                text = it,
+                                modifier = Modifier.padding(bottom = 32.dp)
+                            )
+                        }
+                        state.countryInfo.coatOfArms[stringResource(id = R.string.svg).lowercase()]?.let {
+                            Text(
+                                text = buildAnnotatedString {
+                                    withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold)) {
+                                        append(
+                                            stringResource(id = R.string.coat_of_arms),
+                                            stringResource(id = R.string.colon)
+                                        )
+                                    }
+                                },
+                                modifier = Modifier.padding(bottom = 12.dp),
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            AsyncImage(
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(it)
+                                    .decoderFactory(SvgDecoder.Factory())
+                                    .build(),
+                                modifier = Modifier
+                                    .clickable {
+                                        if (!state.dialogImageData.equals(it)) {
+                                            onEvent(CountryInfoScreenEvent.SetDialogImageData(imageData = it))
+                                        }
+                                        onEvent(CountryInfoScreenEvent.SetIsDialogOpen(value = true))
+                                    }
+                                    .padding(bottom = 32.dp),
+                                contentDescription = null
+                            )
+                        }
                         CountryNativeNamesText(
                             name = state.countryInfo.name,
                             modifier = Modifier.padding(bottom = 8.dp)

@@ -9,6 +9,7 @@ import kotlinx.parcelize.RawValue
 data class CountryInfoScreenState(
     val borderCountries: @RawValue List<Country> = emptyList(),
     val countryInfo: @RawValue Country? = null,
+    val dialogImageData: String? = null,
     val fetchingCountryInfoException: Exception? = null,
     val fetchingBorderCountriesException: Exception? = null,
     val isDialogOpen: Boolean = false,

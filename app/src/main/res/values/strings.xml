@@ -1,4 +1,5 @@
 <resources>
+    <string name="alt">ALT</string>
     <string name="app_name">World&#160;Countries&#160;App</string>
     <string name="area">Area</string>
     <string name="back">Back</string>
@@ -6,6 +7,7 @@
     <string name="capital">Capital</string>
     <string name="capitals">Capitals</string>
     <string name="clear_icon">ClearIcon</string>
+    <string name="coat_of_arms">Coat of Arms</string>
     <string name="colon">&#58;</string>
     <string name="comma">&#44;</string>
     <string name="continent">Continent</string>

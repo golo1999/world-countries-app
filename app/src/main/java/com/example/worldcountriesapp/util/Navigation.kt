@@ -35,11 +35,11 @@ fun Navigation() {
             CountryInfoScreen(
                 code = navBackStackEntry.arguments?.getString("code")!!,
                 state = countryInfoScreenState,
-                onEvent = countryInfoScreenViewModel::onEvent,
                 onBackClick = { navController.popBackStack() },
                 onBorderCountryClick = { countryCode ->
                     navController.navigate("${Screen.CountryInfoScreen.route}/${countryCode}")
-                }
+                },
+                onEvent = countryInfoScreenViewModel::onEvent
             )
         }
         composable(route = Screen.HomeScreen.route) {

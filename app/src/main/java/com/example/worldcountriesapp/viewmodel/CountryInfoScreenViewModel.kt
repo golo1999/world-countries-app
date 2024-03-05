@@ -26,6 +26,7 @@ class CountryInfoScreenViewModel @Inject constructor(
             is CountryInfoScreenEvent.GetCountryByCode -> getCountryByCode(event.code)
             is CountryInfoScreenEvent.ResetBorderCountries -> resetBorderCountries()
             is CountryInfoScreenEvent.ResetCountryInfo -> resetCountryInfo()
+            is CountryInfoScreenEvent.SetDialogImageData -> setDialogImageData(event.imageData)
             is CountryInfoScreenEvent.SetIsDialogOpen -> setIsDialogOpen(event.value)
         }
     }
@@ -83,6 +84,10 @@ class CountryInfoScreenViewModel @Inject constructor(
 
     private fun resetCountryInfo() {
         _state.update { currentState -> currentState.copy(countryInfo = null) }
+    }
+
+    private fun setDialogImageData(imageData: String) {
+        _state.update { currentState -> currentState.copy(dialogImageData = imageData) }
     }
 
     private fun setIsDialogOpen(value: Boolean) {

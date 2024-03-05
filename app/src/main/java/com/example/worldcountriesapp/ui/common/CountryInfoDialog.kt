@@ -16,8 +16,8 @@ import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 
 @Composable
-fun CountryFlagDialog(
-    flagPath: String?,
+fun CountryInfoDialog(
+    imageData: String?,
     onDismiss: () -> Unit
 ) {
     Dialog(
@@ -33,7 +33,7 @@ fun CountryFlagDialog(
             Column {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(flagPath)
+                        .data(imageData)
                         .decoderFactory(SvgDecoder.Factory())
                         .build(),
                     contentDescription = null

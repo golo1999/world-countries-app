@@ -5,5 +5,6 @@ sealed interface CountryInfoScreenEvent {
     data class GetCountryByCode(val code: String) : CountryInfoScreenEvent
     data object ResetBorderCountries : CountryInfoScreenEvent
     data object ResetCountryInfo : CountryInfoScreenEvent
+    data class SetDialogImageData(val imageData: String) : CountryInfoScreenEvent
     data class SetIsDialogOpen(val value: Boolean) : CountryInfoScreenEvent
 }
