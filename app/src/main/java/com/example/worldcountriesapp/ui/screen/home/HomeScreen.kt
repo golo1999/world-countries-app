@@ -40,178 +40,184 @@ fun HomeScreen(
     onEvent: (HomeScreenEvent) -> Unit,
     onCardClick: (countryCode: String) -> Unit
 ) {
-    if (state.isFirstRender) {
-        LaunchedEffect(Unit) {
-            onEvent(HomeScreenEvent.GetAllCountries)
-            onEvent(HomeScreenEvent.SetIsFirstRender(value = false))
+    when {
+        state.isFirstRender -> {
+            LaunchedEffect(Unit) {
+                onEvent(HomeScreenEvent.GetAllCountries)
+                onEvent(HomeScreenEvent.SetIsFirstRender(value = false))
+            }
         }
-    }
 
-    if (state.isFetchingAllCountries) {
-        LoadingScreen()
-    } else if (state.fetchingCountriesException != null) {
-        ErrorScreen(exception = state.fetchingCountriesException)
-    } else {
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            item {
-                // https://proandroiddev.com/jetpack-compose-search-screen-recommendations-7b5c8c119c0e
-                // https://semicolonspace.com/jetpack-compose-material3-search-bar/
-                // Nested scrolling in the same direction is not currently allowed
-                // Using "DockedSearchBar" instead of "SearchBar"
-                DockedSearchBar(
-                    query = state.searchQuery,
-                    onQueryChange = { newSearchQuery -> onEvent(HomeScreenEvent.SetSearchQuery(query = newSearchQuery)) },
-                    onSearch = {
-                        onEvent(HomeScreenEvent.SetIsSearchBarActive(value = false))
-                        onEvent(HomeScreenEvent.FilterCountriesByName(name = it))
-                    },
-                    active = state.isSearchBarActive,
-                    onActiveChange = { newActiveStatus -> onEvent(HomeScreenEvent.SetIsSearchBarActive(value = newActiveStatus)) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = 32.dp,
-                            top = 32.dp,
-                            end = 32.dp,
-                            bottom = 8.dp
-                        )
-                        .shadow(elevation = 4.dp),
-                    placeholder = { Text(text = stringResource(id = R.string.search_for_a_country)) },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = stringResource(id = R.string.search_icon),
-                            tint = when (state.isSearchBarActive) {
-                                true -> MaterialTheme.colorScheme.onBackground
-                                false -> MaterialTheme.colorScheme.onSurfaceVariant
-                            }
-                        )
-                    },
-                    trailingIcon = {
-                        if (state.searchQuery.isNotEmpty()) {
+        state.isFetchingAllCountries -> {
+            LoadingScreen()
+        }
+
+        state.fetchingCountriesException != null -> {
+            ErrorScreen(exception = state.fetchingCountriesException)
+        }
+
+        else -> {
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                item {
+                    // https://proandroiddev.com/jetpack-compose-search-screen-recommendations-7b5c8c119c0e
+                    // https://semicolonspace.com/jetpack-compose-material3-search-bar/
+                    // Nested scrolling in the same direction is not currently allowed
+                    // Using "DockedSearchBar" instead of "SearchBar"
+                    DockedSearchBar(
+                        query = state.searchQuery,
+                        onQueryChange = { newSearchQuery -> onEvent(HomeScreenEvent.SetSearchQuery(query = newSearchQuery)) },
+                        onSearch = {
+                            onEvent(HomeScreenEvent.SetIsSearchBarActive(value = false))
+                            onEvent(HomeScreenEvent.FilterCountriesByName(name = it))
+                        },
+                        active = state.isSearchBarActive,
+                        onActiveChange = { newActiveStatus -> onEvent(HomeScreenEvent.SetIsSearchBarActive(value = newActiveStatus)) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                start = 32.dp,
+                                top = 32.dp,
+                                end = 32.dp,
+                                bottom = 8.dp
+                            )
+                            .shadow(elevation = 4.dp),
+                        placeholder = { Text(text = stringResource(id = R.string.search_for_a_country)) },
+                        leadingIcon = {
                             Icon(
-                                imageVector = Icons.Default.Clear,
-                                contentDescription = stringResource(id = R.string.clear_icon),
-                                modifier = Modifier.clickable {
-                                    onEvent(HomeScreenEvent.SetSearchQuery(query = ""))
-                                    onEvent(HomeScreenEvent.FilterCountriesByName(name = ""))
-                                    onEvent(HomeScreenEvent.SetIsSearchBarActive(value = false))
-                                },
+                                imageVector = Icons.Default.Search,
+                                contentDescription = stringResource(id = R.string.search_icon),
                                 tint = when (state.isSearchBarActive) {
                                     true -> MaterialTheme.colorScheme.onBackground
                                     false -> MaterialTheme.colorScheme.onSurfaceVariant
                                 }
                             )
-                        }
-                    },
-                    shape = RoundedCornerShape(size = 4.dp),
-                    colors = SearchBarDefaults.colors(
-                        containerColor = when (isSystemInDarkTheme()) {
-                            true -> MaterialTheme.colorScheme.surface
-                            false -> MaterialTheme.colorScheme.background
                         },
-                        dividerColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        inputFieldColors = SearchBarDefaults.inputFieldColors(
-                            focusedTextColor = MaterialTheme.colorScheme.onBackground,
-                            unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            cursorColor = MaterialTheme.colorScheme.onBackground,
-                            focusedPlaceholderColor = MaterialTheme.colorScheme.onBackground,
-                            unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    )
-                ) {
-
-                }
-            }
-            item {
-                ExposedDropdownMenuBox(
-                    expanded = state.isSearchBarExpanded,
-                    onExpandedChange = { onEvent(HomeScreenEvent.SetIsSearchBarExpanded(value = !state.isSearchBarExpanded)) },
-                    modifier = Modifier.padding(
-                        horizontal = 32.dp,
-                        vertical = 8.dp
-                    )
-                ) {
-                    TextField(
-                        value = state.selectedRegion,
-                        onValueChange = {},
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .menuAnchor()
-                            .shadow(elevation = 4.dp),
-                        readOnly = true,
-                        label = { Text(text = stringResource(id = R.string.filter_by_region)) },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = state.isSearchBarExpanded) },
+                        trailingIcon = {
+                            if (state.searchQuery.isNotEmpty()) {
+                                Icon(
+                                    imageVector = Icons.Default.Clear,
+                                    contentDescription = stringResource(id = R.string.clear_icon),
+                                    modifier = Modifier.clickable {
+                                        onEvent(HomeScreenEvent.SetSearchQuery(query = ""))
+                                        onEvent(HomeScreenEvent.FilterCountriesByName(name = ""))
+                                        onEvent(HomeScreenEvent.SetIsSearchBarActive(value = false))
+                                    },
+                                    tint = when (state.isSearchBarActive) {
+                                        true -> MaterialTheme.colorScheme.onBackground
+                                        false -> MaterialTheme.colorScheme.onSurfaceVariant
+                                    }
+                                )
+                            }
+                        },
                         shape = RoundedCornerShape(size = 4.dp),
-                        colors = ExposedDropdownMenuDefaults.textFieldColors(
-                            focusedTextColor = MaterialTheme.colorScheme.onBackground,
-                            unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            focusedContainerColor = when (isSystemInDarkTheme()) {
+                        colors = SearchBarDefaults.colors(
+                            containerColor = when (isSystemInDarkTheme()) {
                                 true -> MaterialTheme.colorScheme.surface
                                 false -> MaterialTheme.colorScheme.background
                             },
-                            unfocusedContainerColor = when (isSystemInDarkTheme()) {
-                                true -> MaterialTheme.colorScheme.surface
-                                false -> MaterialTheme.colorScheme.background
-                            },
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            focusedTrailingIconColor = MaterialTheme.colorScheme.onBackground,
-                            unfocusedTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            focusedLabelColor = MaterialTheme.colorScheme.onBackground,
-                            unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    )
-                    ExposedDropdownMenu(
-                        expanded = state.isSearchBarExpanded,
-                        onDismissRequest = { onEvent(HomeScreenEvent.SetIsSearchBarExpanded(value = false)) }
-                    ) {
-                        state.allRegions.forEach { region ->
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = region,
-                                        color = MaterialTheme.colorScheme.onBackground
-                                    )
-                                },
-                                onClick = {
-                                    onEvent(HomeScreenEvent.SetSelectedRegion(region))
-                                    onEvent(HomeScreenEvent.FilterCountriesByRegion(region))
-                                    onEvent(HomeScreenEvent.SetIsSearchBarExpanded(value = false))
-                                },
-                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                            dividerColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            inputFieldColors = SearchBarDefaults.inputFieldColors(
+                                focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                                unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                cursorColor = MaterialTheme.colorScheme.onBackground,
+                                focusedPlaceholderColor = MaterialTheme.colorScheme.onBackground,
+                                unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant
                             )
+                        )
+                    ) {
+
+                    }
+                }
+                item {
+                    ExposedDropdownMenuBox(
+                        expanded = state.isSearchBarExpanded,
+                        onExpandedChange = { onEvent(HomeScreenEvent.SetIsSearchBarExpanded(value = !state.isSearchBarExpanded)) },
+                        modifier = Modifier.padding(
+                            horizontal = 32.dp,
+                            vertical = 8.dp
+                        )
+                    ) {
+                        TextField(
+                            value = state.selectedRegion,
+                            onValueChange = {},
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .menuAnchor()
+                                .shadow(elevation = 4.dp),
+                            readOnly = true,
+                            label = { Text(text = stringResource(id = R.string.filter_by_region)) },
+                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = state.isSearchBarExpanded) },
+                            shape = RoundedCornerShape(size = 4.dp),
+                            colors = ExposedDropdownMenuDefaults.textFieldColors(
+                                focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                                unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                focusedContainerColor = when (isSystemInDarkTheme()) {
+                                    true -> MaterialTheme.colorScheme.surface
+                                    false -> MaterialTheme.colorScheme.background
+                                },
+                                unfocusedContainerColor = when (isSystemInDarkTheme()) {
+                                    true -> MaterialTheme.colorScheme.surface
+                                    false -> MaterialTheme.colorScheme.background
+                                },
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent,
+                                focusedTrailingIconColor = MaterialTheme.colorScheme.onBackground,
+                                unfocusedTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                                unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        )
+                        ExposedDropdownMenu(
+                            expanded = state.isSearchBarExpanded,
+                            onDismissRequest = { onEvent(HomeScreenEvent.SetIsSearchBarExpanded(value = false)) }
+                        ) {
+                            state.allRegions.forEach { region ->
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = region,
+                                            color = MaterialTheme.colorScheme.onBackground
+                                        )
+                                    },
+                                    onClick = {
+                                        onEvent(HomeScreenEvent.SetSelectedRegion(region))
+                                        onEvent(HomeScreenEvent.FilterCountriesByRegion(region))
+                                        onEvent(HomeScreenEvent.SetIsSearchBarExpanded(value = false))
+                                    },
+                                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                                )
+                            }
                         }
                     }
                 }
-            }
-            if (state.filteredCountries.isEmpty()) {
-                item {
-                    Text(
-                        text = stringResource(id = R.string.no_countries_found),
-                        modifier = Modifier.padding(
-                            start = 32.dp,
-                            top = 8.dp,
-                            end = 32.dp
-                        ),
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            } else {
-                itemsIndexed(
-                    items = state.filteredCountries,
-                    key = { index, country -> country.name.common.lowercase().plus(index) }
-                ) { index, countryPresentation ->
-                    CountryPresentationCard(
-                        countryPresentation,
-                        isFirst = index == 0,
-                        isLast = index == state.filteredCountries.size - 1,
-                        onClick = {
-                            // Finding the first uppercase alt spelling
-                            val countryCode = countryPresentation.altSpellings.filter { it == it.uppercase() }[0]
-                            onCardClick(countryCode)
-                        }
-                    )
+                if (state.filteredCountries.isEmpty()) {
+                    item {
+                        Text(
+                            text = stringResource(id = R.string.no_countries_found),
+                            modifier = Modifier.padding(
+                                start = 32.dp,
+                                top = 8.dp,
+                                end = 32.dp
+                            ),
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                } else {
+                    itemsIndexed(
+                        items = state.filteredCountries,
+                        key = { index, country -> country.name.common.lowercase().plus(index) }
+                    ) { index, countryPresentation ->
+                        CountryPresentationCard(
+                            countryPresentation,
+                            isFirst = index == 0,
+                            isLast = index == state.filteredCountries.size - 1,
+                            onClick = {
+                                // Finding the first uppercase alt spelling
+                                val countryCode = countryPresentation.altSpellings.filter { it == it.uppercase() }[0]
+                                onCardClick(countryCode)
+                            }
+                        )
+                    }
                 }
             }
         }

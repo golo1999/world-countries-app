@@ -1,4 +1,4 @@
-package com.example.worldcountriesapp.util
+package com.example.worldcountriesapp.ui.navigation
 
 sealed class Screen(val route: String) {
     data object CountryInfoScreen : Screen("CountryInfoScreen")

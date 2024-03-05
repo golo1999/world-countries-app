@@ -39,5 +39,6 @@
     <string name="timezones">Timezones</string>
     <string name="top_level_domain">Top&#160;level&#160;domain</string>
     <string name="top_level_domains">Top&#160;level&#160;domains</string>
+    <string name="translations">Translations</string>
     <string name="yes">Yes</string>
 </resources>

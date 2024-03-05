@@ -43,11 +43,7 @@ class CountryInfoScreenViewModel @Inject constructor(
                     val responseBody = response.body()?.get(0)
                     if (responseBody != null) {
                         _state.update { currentState ->
-                            currentState.copy(
-                                borderCountries = currentState.borderCountries.plus(
-                                    responseBody
-                                )
-                            )
+                            currentState.copy(borderCountries = currentState.borderCountries.plus(responseBody))
                         }
                     }
                 }
