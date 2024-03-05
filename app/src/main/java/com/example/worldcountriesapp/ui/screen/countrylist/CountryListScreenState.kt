@@ -1,4 +1,4 @@
-package com.example.worldcountriesapp.ui.screen.home
+package com.example.worldcountriesapp.ui.screen.countrylist
 
 import android.os.Parcelable
 import com.example.worldcountriesapp.data.model.country.CountryPresentation
@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 
 @Parcelize
-data class HomeScreenState(
+data class CountryListScreenState(
     val allCountries: @RawValue List<CountryPresentation> = emptyList(),
     val allRegions: List<String> = emptyList(),
     val fetchingCountriesException: Exception? = null,

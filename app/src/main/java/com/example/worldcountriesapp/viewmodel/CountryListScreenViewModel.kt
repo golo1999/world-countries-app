@@ -3,8 +3,8 @@ package com.example.worldcountriesapp.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worldcountriesapp.repository.CountryRepository
-import com.example.worldcountriesapp.ui.screen.home.HomeScreenEvent
-import com.example.worldcountriesapp.ui.screen.home.HomeScreenState
+import com.example.worldcountriesapp.ui.screen.countrylist.CountryListScreenEvent
+import com.example.worldcountriesapp.ui.screen.countrylist.CountryListScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,23 +14,23 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeScreenViewModel @Inject constructor(
+class CountryListScreenViewModel @Inject constructor(
     private val countryRepository: CountryRepository
 ) : ViewModel() {
-    private val _state = MutableStateFlow(HomeScreenState())
-    val state: StateFlow<HomeScreenState> = _state.asStateFlow()
+    private val _state = MutableStateFlow(CountryListScreenState())
+    val state: StateFlow<CountryListScreenState> = _state.asStateFlow()
 
-    fun onEvent(event: HomeScreenEvent) {
+    fun onEvent(event: CountryListScreenEvent) {
         when (event) {
-            is HomeScreenEvent.FilterCountriesByName -> filterCountriesByName(event.name)
-            is HomeScreenEvent.FilterCountriesByRegion -> filterCountriesByRegion(event.region)
-            is HomeScreenEvent.GetAllCountries -> getAllCountries()
-            is HomeScreenEvent.ResetFilteredCountries -> resetFilteredCountries()
-            is HomeScreenEvent.SetIsFirstRender -> setIsFirstRender(event.value)
-            is HomeScreenEvent.SetIsSearchBarActive -> setIsSearchBarActive(event.value)
-            is HomeScreenEvent.SetIsSearchBarExpanded -> setIsSearchBarExpanded(event.value)
-            is HomeScreenEvent.SetSearchQuery -> setSearchQuery(event.query)
-            is HomeScreenEvent.SetSelectedRegion -> setSelectedRegion(event.region)
+            is CountryListScreenEvent.FilterCountriesByName -> filterCountriesByName(event.name)
+            is CountryListScreenEvent.FilterCountriesByRegion -> filterCountriesByRegion(event.region)
+            is CountryListScreenEvent.GetAllCountries -> getAllCountries()
+            is CountryListScreenEvent.ResetFilteredCountries -> resetFilteredCountries()
+            is CountryListScreenEvent.SetIsFirstRender -> setIsFirstRender(event.value)
+            is CountryListScreenEvent.SetIsSearchBarActive -> setIsSearchBarActive(event.value)
+            is CountryListScreenEvent.SetIsSearchBarExpanded -> setIsSearchBarExpanded(event.value)
+            is CountryListScreenEvent.SetSearchQuery -> setSearchQuery(event.query)
+            is CountryListScreenEvent.SetSelectedRegion -> setSelectedRegion(event.region)
         }
     }
 

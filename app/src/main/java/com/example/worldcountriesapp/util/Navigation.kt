@@ -10,17 +10,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.worldcountriesapp.ui.navigation.Screen
-import com.example.worldcountriesapp.ui.screen.home.HomeScreen
+import com.example.worldcountriesapp.ui.screen.countrylist.CountryListScreen
 import com.example.worldcountriesapp.ui.screen.info.CountryInfoScreen
 import com.example.worldcountriesapp.viewmodel.CountryInfoScreenViewModel
-import com.example.worldcountriesapp.viewmodel.HomeScreenViewModel
+import com.example.worldcountriesapp.viewmodel.CountryListScreenViewModel
 
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
     NavHost(
         navController,
-        startDestination = Screen.HomeScreen.route
+        startDestination = Screen.CountryListScreen.route
     ) {
         composable(
             route = Screen.CountryInfoScreen.route + "/{code}",
@@ -42,13 +42,13 @@ fun Navigation() {
                 onEvent = countryInfoScreenViewModel::onEvent
             )
         }
-        composable(route = Screen.HomeScreen.route) {
-            val homeScreenViewModel = hiltViewModel<HomeScreenViewModel>()
-            val homeScreenState by homeScreenViewModel.state.collectAsState()
+        composable(route = Screen.CountryListScreen.route) {
+            val countryListScreenViewModel = hiltViewModel<CountryListScreenViewModel>()
+            val countryListScreenState by countryListScreenViewModel.state.collectAsState()
 
-            HomeScreen(
-                state = homeScreenState,
-                onEvent = homeScreenViewModel::onEvent,
+            CountryListScreen(
+                state = countryListScreenState,
+                onEvent = countryListScreenViewModel::onEvent,
                 onCardClick = { countryCode ->
                     navController.navigate("${Screen.CountryInfoScreen.route}/${countryCode}")
                 }
