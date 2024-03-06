@@ -10,8 +10,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.worldcountriesapp.ui.navigation.Screen
+import com.example.worldcountriesapp.ui.screen.capitalcitiesquiz.CapitalCitiesQuizScreen
+import com.example.worldcountriesapp.ui.screen.coatofarmsquiz.CoatOfArmsQuizScreen
+import com.example.worldcountriesapp.ui.screen.countryinfo.CountryInfoScreen
 import com.example.worldcountriesapp.ui.screen.countrylist.CountryListScreen
-import com.example.worldcountriesapp.ui.screen.info.CountryInfoScreen
+import com.example.worldcountriesapp.ui.screen.flagsquiz.FlagsQuizScreen
+import com.example.worldcountriesapp.ui.screen.home.HomeScreen
 import com.example.worldcountriesapp.viewmodel.CountryInfoScreenViewModel
 import com.example.worldcountriesapp.viewmodel.CountryListScreenViewModel
 
@@ -20,8 +24,14 @@ fun Navigation() {
     val navController = rememberNavController()
     NavHost(
         navController,
-        startDestination = Screen.CountryListScreen.route
+        startDestination = Screen.HomeScreen.route
     ) {
+        composable(route = Screen.CapitalCitiesQuizScreen.route) {
+            CapitalCitiesQuizScreen()
+        }
+        composable(route = Screen.CoatOfArmsQuizScreen.route) {
+            CoatOfArmsQuizScreen()
+        }
         composable(
             route = Screen.CountryInfoScreen.route + "/{code}",
             arguments = listOf(navArgument("code") {
@@ -52,6 +62,17 @@ fun Navigation() {
                 onCardClick = { countryCode ->
                     navController.navigate("${Screen.CountryInfoScreen.route}/${countryCode}")
                 }
+            )
+        }
+        composable(route = Screen.FlagsQuizScreen.route) {
+            FlagsQuizScreen()
+        }
+        composable(route = Screen.HomeScreen.route) {
+            HomeScreen(
+                onCapitalCitiesQuizClick = { navController.navigate(Screen.CapitalCitiesQuizScreen.route) },
+                onCoatOfArmsQuizClick = { navController.navigate(Screen.CoatOfArmsQuizScreen.route) },
+                onCountryListClick = { navController.navigate(Screen.CountryListScreen.route) },
+                onFlagsQuizClick = { navController.navigate(Screen.FlagsQuizScreen.route) }
             )
         }
     }

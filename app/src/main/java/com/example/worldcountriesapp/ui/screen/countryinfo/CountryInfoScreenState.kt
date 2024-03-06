@@ -1,4 +1,4 @@
-package com.example.worldcountriesapp.ui.screen.info
+package com.example.worldcountriesapp.ui.screen.countryinfo
 
 import android.os.Parcelable
 import com.example.worldcountriesapp.data.model.country.Country

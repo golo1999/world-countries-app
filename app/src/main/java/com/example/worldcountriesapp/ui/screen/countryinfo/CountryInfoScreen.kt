@@ -1,4 +1,4 @@
-package com.example.worldcountriesapp.ui.screen.info
+package com.example.worldcountriesapp.ui.screen.countryinfo
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -97,7 +97,7 @@ fun CountryInfoScreen(
                     modifier = Modifier.padding(all = 32.dp)
                 ) {
                     ElevatedButton(
-                        onClick = { onBackClick() },
+                        onClick = onBackClick,
                         modifier = Modifier.padding(bottom = 72.dp),
                         shape = RectangleShape,
                         colors = ButtonDefaults.elevatedButtonColors(
