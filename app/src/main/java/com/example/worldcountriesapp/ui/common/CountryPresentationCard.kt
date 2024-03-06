@@ -33,7 +33,7 @@ fun CountryPresentationCard(
     onClick: () -> Unit = {}
 ) {
     Card(
-        onClick = { onClick() },
+        onClick,
         modifier = Modifier
             .fillMaxWidth()
             .padding(

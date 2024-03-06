@@ -3,8 +3,8 @@ package com.example.worldcountriesapp.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worldcountriesapp.repository.CountryRepository
-import com.example.worldcountriesapp.ui.screen.info.CountryInfoScreenEvent
-import com.example.worldcountriesapp.ui.screen.info.CountryInfoScreenState
+import com.example.worldcountriesapp.ui.screen.countryinfo.CountryInfoScreenEvent
+import com.example.worldcountriesapp.ui.screen.countryinfo.CountryInfoScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

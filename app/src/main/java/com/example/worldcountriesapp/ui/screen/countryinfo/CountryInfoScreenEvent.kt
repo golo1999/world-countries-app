@@ -1,4 +1,4 @@
-package com.example.worldcountriesapp.ui.screen.info
+package com.example.worldcountriesapp.ui.screen.countryinfo
 
 sealed interface CountryInfoScreenEvent {
     data class GetBorderCountries(val countryCodeList: List<String>) : CountryInfoScreenEvent
