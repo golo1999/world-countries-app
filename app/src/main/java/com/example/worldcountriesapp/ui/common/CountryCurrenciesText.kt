@@ -11,7 +11,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import com.example.worldcountriesapp.R
-import com.example.worldcountriesapp.data.model.country.Currency
+import com.example.worldcountriesapp.data.entity.Currency
 
 @Composable
 fun CountryCurrenciesText(

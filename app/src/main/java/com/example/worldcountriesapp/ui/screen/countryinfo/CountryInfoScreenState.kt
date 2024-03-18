@@ -1,7 +1,7 @@
 package com.example.worldcountriesapp.ui.screen.countryinfo
 
 import android.os.Parcelable
-import com.example.worldcountriesapp.data.model.country.Country
+import com.example.worldcountriesapp.data.entity.Country
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 

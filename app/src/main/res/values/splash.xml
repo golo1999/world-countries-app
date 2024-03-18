@@ -4,7 +4,7 @@
     <style name="Theme.WorldCountriesApp.Main" parent="Theme.SplashScreen">
         <item name="postSplashScreenTheme">@style/Theme.WorldCountriesApp</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_explore</item>
-        <item name="windowSplashScreenAnimationDuration">2000</item>
+<!--        <item name="windowSplashScreenAnimationDuration">15000</item>-->
         <item name="windowSplashScreenBackground">#FFFFFF</item>
 <!--        <item name="android:navigationBarColor">#FFFFFF</item>-->
         <item name="android:windowLightNavigationBar">true</item>

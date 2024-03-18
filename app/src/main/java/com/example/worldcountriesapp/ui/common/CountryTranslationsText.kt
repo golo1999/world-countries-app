@@ -11,7 +11,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import com.example.worldcountriesapp.R
-import com.example.worldcountriesapp.data.model.country.Translation
+import com.example.worldcountriesapp.data.entity.Translation
 
 @Composable
 fun CountryTranslationsText(

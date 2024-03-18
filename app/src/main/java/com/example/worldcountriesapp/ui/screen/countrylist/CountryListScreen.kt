@@ -23,23 +23,28 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.worldcountriesapp.R
-import com.example.worldcountriesapp.ui.common.CountryPresentationCard
+import com.example.worldcountriesapp.ui.common.CountryCard
 import com.example.worldcountriesapp.ui.screen.error.ErrorScreen
 import com.example.worldcountriesapp.ui.screen.loading.LoadingScreen
+import kotlinx.coroutines.launch
+import kotlin.reflect.KSuspendFunction1
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CountryListScreen(
     state: CountryListScreenState,
-    onEvent: (CountryListScreenEvent) -> Unit,
+    onEvent: KSuspendFunction1<CountryListScreenEvent, Unit>,
     onCardClick: (countryCode: String) -> Unit
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     when {
         state.isFirstRender -> {
             LaunchedEffect(Unit) {
@@ -65,13 +70,31 @@ fun CountryListScreen(
                     // Using "DockedSearchBar" instead of "SearchBar"
                     DockedSearchBar(
                         query = state.searchQuery,
-                        onQueryChange = { newSearchQuery -> onEvent(CountryListScreenEvent.SetSearchQuery(query = newSearchQuery)) },
+                        onQueryChange = { newSearchQuery ->
+                            coroutineScope.launch {
+                                onEvent(
+                                    CountryListScreenEvent.SetSearchQuery(
+                                        query = newSearchQuery
+                                    )
+                                )
+                            }
+                        },
                         onSearch = {
-                            onEvent(CountryListScreenEvent.SetIsSearchBarActive(value = false))
-                            onEvent(CountryListScreenEvent.FilterCountriesByName(name = it))
+                            coroutineScope.launch {
+                                onEvent(CountryListScreenEvent.SetIsSearchBarActive(value = false))
+                                onEvent(CountryListScreenEvent.FilterCountriesByName(name = it))
+                            }
                         },
                         active = state.isSearchBarActive,
-                        onActiveChange = { newActiveStatus -> onEvent(CountryListScreenEvent.SetIsSearchBarActive(value = newActiveStatus)) },
+                        onActiveChange = { newActiveStatus ->
+                            coroutineScope.launch {
+                                onEvent(
+                                    CountryListScreenEvent.SetIsSearchBarActive(
+                                        value = newActiveStatus
+                                    )
+                                )
+                            }
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(
@@ -98,9 +121,11 @@ fun CountryListScreen(
                                     imageVector = Icons.Default.Clear,
                                     contentDescription = stringResource(id = R.string.clear_icon),
                                     modifier = Modifier.clickable {
-                                        onEvent(CountryListScreenEvent.SetSearchQuery(query = ""))
-                                        onEvent(CountryListScreenEvent.FilterCountriesByName(name = ""))
-                                        onEvent(CountryListScreenEvent.SetIsSearchBarActive(value = false))
+                                        coroutineScope.launch {
+                                            onEvent(CountryListScreenEvent.SetSearchQuery(query = ""))
+                                            onEvent(CountryListScreenEvent.FilterCountriesByName(name = ""))
+                                            onEvent(CountryListScreenEvent.SetIsSearchBarActive(value = false))
+                                        }
                                     },
                                     tint = when (state.isSearchBarActive) {
                                         true -> MaterialTheme.colorScheme.onBackground
@@ -131,7 +156,15 @@ fun CountryListScreen(
                 item {
                     ExposedDropdownMenuBox(
                         expanded = state.isSearchBarExpanded,
-                        onExpandedChange = { onEvent(CountryListScreenEvent.SetIsSearchBarExpanded(value = !state.isSearchBarExpanded)) },
+                        onExpandedChange = {
+                            coroutineScope.launch {
+                                onEvent(
+                                    CountryListScreenEvent.SetIsSearchBarExpanded(
+                                        value = !state.isSearchBarExpanded
+                                    )
+                                )
+                            }
+                        },
                         modifier = Modifier.padding(
                             horizontal = 32.dp,
                             vertical = 8.dp
@@ -169,7 +202,15 @@ fun CountryListScreen(
                         )
                         ExposedDropdownMenu(
                             expanded = state.isSearchBarExpanded,
-                            onDismissRequest = { onEvent(CountryListScreenEvent.SetIsSearchBarExpanded(value = false)) }
+                            onDismissRequest = {
+                                coroutineScope.launch {
+                                    onEvent(
+                                        CountryListScreenEvent.SetIsSearchBarExpanded(
+                                            value = false
+                                        )
+                                    )
+                                }
+                            }
                         ) {
                             state.allRegions.forEach { region ->
                                 DropdownMenuItem(
@@ -180,9 +221,11 @@ fun CountryListScreen(
                                         )
                                     },
                                     onClick = {
-                                        onEvent(CountryListScreenEvent.SetSelectedRegion(region))
-                                        onEvent(CountryListScreenEvent.FilterCountriesByRegion(region))
-                                        onEvent(CountryListScreenEvent.SetIsSearchBarExpanded(value = false))
+                                        coroutineScope.launch {
+                                            onEvent(CountryListScreenEvent.SetSelectedRegion(region))
+                                            onEvent(CountryListScreenEvent.FilterCountriesByRegion(region))
+                                            onEvent(CountryListScreenEvent.SetIsSearchBarExpanded(value = false))
+                                        }
                                     },
                                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
                                 )
@@ -206,14 +249,14 @@ fun CountryListScreen(
                     itemsIndexed(
                         items = state.filteredCountries,
                         key = { index, country -> country.name.common.lowercase().plus(index) }
-                    ) { index, countryPresentation ->
-                        CountryPresentationCard(
-                            countryPresentation,
+                    ) { index, country ->
+                        CountryCard(
+                            country,
                             isFirst = index == 0,
                             isLast = index == state.filteredCountries.size - 1,
                             onClick = {
                                 // Finding the first uppercase alt spelling
-                                val countryCode = countryPresentation.altSpellings.filter { it == it.uppercase() }[0]
+                                val countryCode = country.altSpellings.filter { it == it.uppercase() }[0]
                                 onCardClick(countryCode)
                             }
                         )

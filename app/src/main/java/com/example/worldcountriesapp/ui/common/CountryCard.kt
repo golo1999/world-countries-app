@@ -20,14 +20,14 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
-import com.example.worldcountriesapp.mock.MockedData
 import com.example.worldcountriesapp.R
-import com.example.worldcountriesapp.data.model.country.CountryPresentation
+import com.example.worldcountriesapp.data.entity.Country
+import com.example.worldcountriesapp.mock.MockedData
 import com.example.worldcountriesapp.ui.theme.WorldCountriesAppTheme
 
 @Composable
-fun CountryPresentationCard(
-    countryPresentation: CountryPresentation,
+fun CountryCard(
+    country: Country,
     isFirst: Boolean,
     isLast: Boolean,
     onClick: () -> Unit = {}
@@ -53,7 +53,7 @@ fun CountryPresentationCard(
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(countryPresentation.flags[stringResource(id = R.string.svg).lowercase()])
+                .data(country.flags[stringResource(id = R.string.svg).lowercase()])
                 .decoderFactory(SvgDecoder.Factory())
                 .build(),
             contentDescription = null
@@ -65,25 +65,25 @@ fun CountryPresentationCard(
                 .padding(all = 16.dp)
         ) {
             Text(
-                text = countryPresentation.name.common,
+                text = country.name.common,
                 modifier = Modifier.padding(bottom = 16.dp),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.W800,
                 color = MaterialTheme.colorScheme.onSurface
             )
-            CountryPopulationText(population = countryPresentation.population)
-            CountryRegionText(region = countryPresentation.region)
-            CountryCapitalText(capitals = countryPresentation.capital)
+            CountryPopulationText(population = country.population)
+            CountryRegionText(region = country.region)
+            CountryCapitalText(capitals = country.capital)
         }
     }
 }
 
 @Preview(showSystemUi = true)
 @Composable
-fun CountryPresentationCardPreview() {
+fun CountryCardPreview() {
     WorldCountriesAppTheme {
-        CountryPresentationCard(
-            countryPresentation = MockedData.countryPresentation,
+        CountryCard(
+            country = MockedData.country,
             isFirst = true,
             isLast = true
         )

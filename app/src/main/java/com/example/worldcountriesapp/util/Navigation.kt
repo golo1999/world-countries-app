@@ -58,11 +58,10 @@ fun Navigation() {
 
             CountryListScreen(
                 state = countryListScreenState,
-                onEvent = countryListScreenViewModel::onEvent,
-                onCardClick = { countryCode ->
-                    navController.navigate("${Screen.CountryInfoScreen.route}/${countryCode}")
-                }
-            )
+                onEvent = countryListScreenViewModel::onEvent
+            ) { countryCode ->
+                navController.navigate("${Screen.CountryInfoScreen.route}/${countryCode}")
+            }
         }
         composable(route = Screen.FlagsQuizScreen.route) {
             FlagsQuizScreen()

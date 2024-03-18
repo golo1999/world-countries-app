@@ -64,11 +64,7 @@ fun CountryInfoScreen(
     }
 
     when {
-        state.isFetchingCountryInfo -> {
-            LoadingScreen()
-        }
-
-        state.countryInfo?.borders != null && state.isFetchingBorderCountries -> {
+        state.isFetchingCountryInfo || (state.countryInfo?.borders != null && state.isFetchingBorderCountries) -> {
             LoadingScreen()
         }
 

@@ -20,7 +20,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.worldcountriesapp.R
-import com.example.worldcountriesapp.data.model.country.Country
+import com.example.worldcountriesapp.data.entity.Country
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
