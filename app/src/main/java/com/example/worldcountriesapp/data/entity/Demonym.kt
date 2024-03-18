@@ -1,4 +1,4 @@
-package com.example.worldcountriesapp.data.model.country
+package com.example.worldcountriesapp.data.entity
 
 import androidx.compose.runtime.Immutable
 

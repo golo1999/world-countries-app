@@ -26,7 +26,6 @@ fun HomeScreen(
     onFlagsQuizClick: () -> Unit
 ) {
     Column {
-        Text(text = "WorldCountries")
         ElevatedButton(
             onClick = onCountryListClick,
             modifier = Modifier.padding(bottom = 72.dp),

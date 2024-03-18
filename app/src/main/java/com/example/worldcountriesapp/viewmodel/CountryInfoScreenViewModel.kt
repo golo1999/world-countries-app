@@ -36,16 +36,11 @@ class CountryInfoScreenViewModel @Inject constructor(
             _state.update { currentState -> currentState.copy(isFetchingBorderCountries = true) }
             try {
                 countryCodeList.forEach { countryCode ->
-                    val response = countryRepository.getCountryByCode(countryCode)
-                    if (!response.isSuccessful) {
-                        throw Exception("An error occurred while fetching the border countries. Please try again!")
-                    }
+                    val borderCountry = countryRepository.getByCode(countryCode)
+                        ?: throw Exception("An error occurred while fetching the border countries. Please try again!")
 
-                    val responseBody = response.body()?.get(0)
-                    if (responseBody != null) {
-                        _state.update { currentState ->
-                            currentState.copy(borderCountries = currentState.borderCountries.plus(responseBody))
-                        }
+                    _state.update { currentState ->
+                        currentState.copy(borderCountries = currentState.borderCountries.plus(borderCountry))
                     }
                 }
             } catch (exception: Exception) {
@@ -60,15 +55,13 @@ class CountryInfoScreenViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { currentState -> currentState.copy(isFetchingCountryInfo = true) }
             try {
-                val response = countryRepository.getCountryByCode(code)
-                if (!response.isSuccessful) {
-                    throw Exception("An error occurred while fetching the country information. Please try again!")
-                }
+                val country = countryRepository.getByCode(code)
+                    ?: throw Exception("An error occurred while fetching the country information. Please try again!")
 
-                val responseBody = response.body()?.get(0)
-                _state.update { currentState -> currentState.copy(countryInfo = responseBody) }
-                if (responseBody?.borders != null) {
-                    getBorderCountries(responseBody.borders)
+                _state.update { currentState -> currentState.copy(countryInfo = country) }
+
+                if (country.borders != null) {
+                    getBorderCountries(country.borders)
                 }
             } catch (exception: Exception) {
                 _state.update { currentState -> currentState.copy(fetchingCountryInfoException = exception) }
